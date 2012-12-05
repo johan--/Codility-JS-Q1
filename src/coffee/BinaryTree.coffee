@@ -25,19 +25,28 @@ class Tree.Binary
         @rightTree = binaryTree
 
 
-(->
-
-  Object.defineProperty Tree.Binary.prototype, "height",
-    get: ->
-      0
-
-    set: (height) ->
-        throw "You cannot set height directly"
-
-)()
-
-
 class Tree.BinaryUtility
 
     treeHeight:(binaryTree)->
-        0
+        return if binaryTree is null
+
+        return @heightOfTree binaryTree
+
+    heightOfTree: (binaryTree) ->
+        return 0 if binaryTree is null or !binaryTree.hasChildren()
+
+        return Math.max(@heightOfTree(binaryTree.leftTree), @heightOfTree binaryTree.rightTree) + 1
+
+
+(->
+    utility = new Tree.BinaryUtility()
+
+    Object.defineProperty Tree.Binary.prototype, "height",
+        get: ->
+            utility.treeHeight this
+
+        set: (height) ->
+            throw "You cannot set height directly"
+
+)()
+

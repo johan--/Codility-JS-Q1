@@ -41,27 +41,39 @@
 
   })();
 
-  (function() {
-    return Object.defineProperty(Tree.Binary.prototype, "height", {
-      get: function() {
-        return 0;
-      },
-      set: function(height) {
-        throw "You cannot set height directly";
-      }
-    });
-  })();
-
   Tree.BinaryUtility = (function() {
 
     function BinaryUtility() {}
 
     BinaryUtility.prototype.treeHeight = function(binaryTree) {
-      return 0;
+      if (binaryTree === null) {
+        return;
+      }
+      return this.heightOfTree(binaryTree);
+    };
+
+    BinaryUtility.prototype.heightOfTree = function(binaryTree) {
+      if (binaryTree === null || !binaryTree.hasChildren()) {
+        return 0;
+      }
+      return Math.max(this.heightOfTree(binaryTree.leftTree), this.heightOfTree(binaryTree.rightTree)) + 1;
     };
 
     return BinaryUtility;
 
+  })();
+
+  (function() {
+    var utility;
+    utility = new Tree.BinaryUtility();
+    return Object.defineProperty(Tree.Binary.prototype, "height", {
+      get: function() {
+        return utility.treeHeight(this);
+      },
+      set: function(height) {
+        throw "You cannot set height directly";
+      }
+    });
   })();
 
 }).call(this);
